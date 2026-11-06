@@ -17,9 +17,23 @@ The primary objective is to understand how endpoint activities are monitored, ho
 ## 2. High-Level Architecture Diagram
 
 The following diagram illustrates the relationship between the virtual machines and the security monitoring pipeline.
-
 ```mermaid
-<img width="300" height="368" alt="Screenshot 2026-11-06 122101" src="https://github.com/user-attachments/assets/f1ec3a02-14af-4bfc-937b-1eb7b7c4d7af" />
+ H["HOST SYSTEM<br/>Oracle VirtualBox"]
+
+    subgraph N["Isolated Virtual Network — Host-Only Network"]
+        K["Kali Linux<br/>Attacker Node<br/>IP: [Kali IP]"]
+        W["Windows 11<br/>Monitored Endpoint<br/>IP: [Windows IP]<br/>Sysmon + Wazuh Agent"]
+        U["Ubuntu Linux<br/>Wazuh SIEM Manager<br/>IP: [Ubuntu IP]"]
+    end
+
+    K -->|"Controlled attack simulations"| W
+    W -->|"Sysmon generates telemetry"| A["Wazuh Agent"]
+    A -->|"Forwards security events"| U
+    U -->|"Analyzes events and generates alerts"| D["Wazuh Dashboard"]
+
+    H -.->|"Virtualization platform"| N
+```
+
 
 ## 3. Lab Components and Roles
 
